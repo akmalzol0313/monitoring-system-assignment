@@ -1,0 +1,36 @@
+FILE MODIFIED: .gnupg
+Property        Old Value                 New Value                
+-----------------------------------------------------------------
+Size (Bytes)    4096                      4096                     
+Owner/Group     1000/1000                 1000/1000                
+Type            dir                       dir                      
+Modified        Tue Feb  3 09:27:41 2026  Tue Feb  3 21:05:33 2026 
+Accessed        Tue Feb  3 09:27:29 2026  Tue Feb  3 09:27:29 2026 
+
+FILE CREATED: test.txt | Type=file | Size=5 | Permissions=0o100664 | Owner=1000 | Group=1000 | Created=Tue Feb  3 21:06:07 2026
+FILE MODIFIED: .config
+Property        Old Value                 New Value                
+-----------------------------------------------------------------
+Size (Bytes)    4096                      4096                     
+Owner/Group     1000/1000                 1000/1000                
+Type            dir                       dir                      
+Modified        Tue Feb  3 20:59:22 2026  Tue Feb  3 21:06:02 2026 
+Accessed        Mon Jan 26 01:26:17 2026  Mon Jan 26 01:26:17 2026 
+
+FILE MODIFIED: Documents
+Property        Old Value                 New Value                
+-----------------------------------------------------------------
+Size (Bytes)    4096                      4096                     
+Owner/Group     1000/1000                 1000/1000                
+Type            dir                       dir                      
+Modified        Tue Feb  3 21:01:31 2026  Tue Feb  3 21:10:23 2026 
+Accessed        Tue Feb  3 21:01:31 2026  Tue Feb  3 21:10:25 2026 
+
+FILE MODIFIED: Documents
+Property        Old Value                 New Value                
+-----------------------------------------------------------------
+Size (Bytes)    4096                      4096                     
+Owner/Group     1000/1000                 1000/1000                
+Type            dir                       dir                      
+Modified        Tue Feb  3 21:10:23 2026  Wed Feb  4 00:40:26 2026 
+Accessed        Tue Feb  3 21:10:25 2026  Wed Feb  4 00:40:28 2026 
