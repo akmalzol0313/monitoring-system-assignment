@@ -1,0 +1,52 @@
+# ==================== DIRECTORY MONITORING LOG FORMAT ====================
+# File: dir_monitor_log.txt
+# Format: Detailed multi-line entries with separators
+
+[2026-02-03 18:04:31] FILE CREATED: testfile.txt
+  Type: regular file
+  Size: 0 bytes
+  Permissions: 664
+  Modified: 2026-02-03 18:04:28
+----------------------------------------
+[2026-02-03 18:06:18] FILE MODIFIED: testfile.txt
+  Type: regular file
+  Size: 6 bytes
+  Permissions: 755
+  Modified: 2026-02-03 18:05:57
+  Previous: size:0->6, perms:664->755, mtime:2026-02-03 18:04:28->2026-02-03 18:05:57
+----------------------------------------
+[2026-02-03 18:07:18] FILE DELETED: testfile.txt
+----------------------------------------
+[2026-02-03 18:10:45] FILE CREATED: document.pdf
+  Type: regular file
+  Size: 2048 bytes
+  Permissions: 644
+  Modified: 2026-02-03 18:10:45
+----------------------------------------
+[2026-02-03 18:15:22] FILE MODIFIED: document.pdf
+  Type: regular file
+  Size: 4096 bytes
+  Permissions: 644
+  Modified: 2026-02-03 18:15:20
+  Previous: size:2048->4096, mtime:2026-02-03 18:10:45->2026-02-03 18:15:20
+----------------------------------------
+[2026-02-03 18:20:01] FILE CREATED: config.ini
+  Type: regular file
+  Size: 256 bytes
+  Permissions: 600
+  Modified: 2026-02-03 18:20:00
+----------------------------------------
+
+# ==================== LOG FORMAT RULES ====================
+# 1. TIMESTAMP FORMAT: [YYYY-MM-DD HH:MM:SS]
+# 2. EVENT TYPES: FILE CREATED, FILE MODIFIED, FILE DELETED
+# 3. METADATA LINES (indented with 2 spaces):
+#      Type: [regular file|directory|symbolic link]
+#      Size: [number] bytes
+#      Permissions: [3-digit octal]
+#      Modified: [YYYY-MM-DD HH:MM:SS]
+# 4. FOR MODIFIED FILES ONLY: Previous: [changes]
+#    Change format: field:old->new
+#    Example: size:0->6, perms:664->755, mtime:old_time->new_time
+# 5. SEPARATOR: 40 hyphens after each entry
+# 6. DELETED FILES: No metadata, just event and separator
