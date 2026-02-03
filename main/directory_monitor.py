@@ -1,89 +1,86 @@
 import os
 import time
-import pwd
-import grp
-from datetime import datetime
+from pathlib import Path
 
-# 1. Configuration: Path setup for Linux environment [cite: 17, 82]
-MONITOR_DIR = "./data/monitored_dir"
-LOG_FILE = "./logs/directory_events.csv"
+# ----- CONFIG -----
+monitored_dir = "."  # monitor the folder where the script is (Section 2)
+log_file = "directory_log.txt"
+script_file = "A-Directory-Monitor.py"
+interval = 10  # seconds between checks
 
-def get_metadata(filepath):
-    """
-    Extracts mandatory metadata using Python os and pwd modules[cite: 33, 40].
-    Captures: Filename, Type, Size, Owner/Group, and Timestamps[cite: 34, 35, 36, 37, 38, 39].
-    """
-    s = os.stat(filepath)
-    
-    # Identify File Type (Regular file, directory, or symbolic link) [cite: 36]
-    if os.path.islink(filepath):
-        ftype = "Symbolic Link"
-    elif os.path.isdir(filepath):
-        ftype = "Directory"
-    else:
-        ftype = "Regular File"
+# ----- FUNCTIONS -----
+def get_directory_state(directory):
+    """Return current state of directory with metadata"""
+    state = {}
+    for item in Path(directory).iterdir():
+        # skip the log file and the script itself
+        if item.name in [log_file, script_file]:
+            continue
+        stat = item.stat()
+        state[item.name] = {
+            "type": "file" if item.is_file() else ("dir" if item.is_dir() else "symlink"),
+            "size": stat.st_size,
+            "permissions": oct(stat.st_mode),
+            "owner": stat.st_uid,
+            "group": stat.st_gid,
+            "atime": stat.st_atime,
+            "mtime": stat.st_mtime,
+            "ctime": stat.st_ctime
+        }
+    return state
 
-    return {
-        "type": ftype,
-        "size": s.st_size, # Size in bytes [cite: 37]
-        "owner": pwd.getpwuid(s.st_uid).pw_name, # Owner name [cite: 38]
-        "group": grp.getgrgid(s.st_gid).gr_name, # Group name [cite: 38]
-        "perms": oct(s.st_mode & 0o777), # File permissions [cite: 22]
-        "mtime": datetime.fromtimestamp(s.st_mtime).strftime('%Y-%m-%d %H:%M:%S') # Mod timestamp [cite: 39]
-    }
+def log_event(message):
+    """Append event message to log file and print to terminal"""
+    with open(log_file, "a") as f:
+        f.write(message + "\n")
+    print(message)
 
-def log_to_csv(event, name, m):
-    """Writes directory change logs to a structured CSV file[cite: 13, 68, 69]."""
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    # Format: Timestamp, Event, Filename, Type, Size, Owner, Permissions
-    entry = f"{timestamp},{event},{name},{m['type']},{m['size']},{m['owner']},{m['perms']}\n"
-    
-    with open(LOG_FILE, "a") as f:
-        f.write(entry)
-    print(f"[!] {event} DETECTED: {name}")
+# ----- MAIN PROGRAM -----
+print(f"Monitoring '{os.path.abspath(monitored_dir)}' ... (logging to '{log_file}')")
 
-def start_monitoring():
-    """Main execution loop for directory monitoring[cite: 79, 81, 84]."""
-    print(f"[*] Student A: Monitoring started on {MONITOR_DIR}...")
-    
-    # Initial snapshot to compare against [cite: 13]
-    last_state = {f: get_metadata(os.path.join(MONITOR_DIR, f)) for f in os.listdir(MONITOR_DIR)}
+# Initialize baseline: existing files are ignored
+old_state = get_directory_state(monitored_dir)
 
-    try:
-        while True:
-            time.sleep(10) # 10-second monitoring interval [cite: 42]
-            current_files = os.listdir(MONITOR_DIR)
-            current_state = {}
+while True:
+    time.sleep(interval)
+    new_state = get_directory_state(monitored_dir)
 
-            # Detect New and Modified Files [cite: 19, 20, 26, 31]
-            for f in current_files:
-                path = os.path.join(MONITOR_DIR, f)
-                try:
-                    meta = get_metadata(path)
-                    current_state[f] = meta
+    # FILE CREATION
+    for filename, data in new_state.items():
+        if filename not in old_state:
+            log_event(
+                f"FILE CREATED: {filename} | "
+                f"Type={data['type']} | Size={data['size']} | "
+                f"Permissions={data['permissions']} | "
+                f"Owner={data['owner']} | Group={data['group']} | "
+                f"Created={time.ctime(data['ctime'])}"
+            )
 
-                    if f not in last_state:
-                        log_to_csv("CREATED", f, meta) # New file detection [cite: 21]
-                    elif meta != last_state[f]:
-                        log_to_csv("MODIFIED", f, meta) # Changes in size/time/perms [cite: 31, 32]
-                except FileNotFoundError:
-                    continue
+    # FILE DELETION
+    for filename in old_state:
+        if filename not in new_state:
+            log_event(f"FILE DELETED: {filename} | Detection Time={time.ctime(time.time())}")
 
-            # Detect Deleted Files [cite: 23, 24, 25]
-            for f in last_state:
-                if f not in current_state:
-                    # Log deletion using last known metadata
-                    log_to_csv("DELETED", f, last_state[f])
+    # FILE MODIFICATION (Table-style formatting) *CLEAN TO LOOK AT*
+    for filename, new_data in new_state.items():
+        if filename in old_state:
+            old_data = old_state[filename]
+            if (old_data["size"] != new_data["size"] or
+                old_data["permissions"] != new_data["permissions"] or
+                old_data["mtime"] != new_data["mtime"]):
 
-            last_state = current_state
-            
-    except KeyboardInterrupt:
-        print("\n[*] Monitoring stopped by user.")
+                # Table-style log *CLEAN TO LOOK AT*
+                # Table-style log including ALL mandatory metadata
+                log_event(
+                    f"FILE MODIFIED: {filename}\n"
+                    f"{'Property':<15} {'Old Value':<25} {'New Value':<25}\n"
+                    f"{'-'*65}\n"
+                    f"{'Size (Bytes)':<15} {old_data['size']:<25} {new_data['size']:<25}\n"
+                    f"{'Owner/Group':<15} {old_data['owner']}/{old_data['group']:<20} {new_data['owner']}/{new_data['group']:<20}\n"
+                    f"{'Type':<15} {old_data['type']:<25} {new_data['type']:<25}\n"
+                    f"{'Modified':<15} {time.ctime(old_data['mtime']):<25} {time.ctime(new_data['mtime']):<25}\n"
+                    f"{'Accessed':<15} {time.ctime(old_data['atime']):<25} {time.ctime(new_data['atime']):<25}\n"
+                )
 
-if __name__ == "__main__":
-    # Ensure log file has a header on first run
-    if not os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "w") as f:
-            f.write("Timestamp,Event,Filename,Type,Size_Bytes,Owner,Permissions\n")
-            
-    start_monitoring()
+    # Update baseline
+    old_state = new_state
