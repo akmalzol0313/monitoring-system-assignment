@@ -1,0 +1,5 @@
+timestamp,cpu_usage_percent,load_avg_1,load_avg_5,load_avg_15,total_memory_gb,used_memory_gb,available_memory_gb,memory_usage_percent,disk_total_gb,disk_used_gb,disk_free_gb,disk_usage_percent,system_uptime_seconds,cumulative_idle_seconds,total_processes,running_processes,sleeping_processes,top_cpu_processes,top_memory_processes
+2026-02-03 19:39:47,3.7,0.2212,0.1377,0.09717,4.053,1.641,2.383,41.0,28.81,10.8,16.52,40.0,2679,4668,209,1,150,systemd; kthreadd; pool_workqueue_release,firefox; gnome-shell; Isolated Web Co
+2026-02-03 19:39:58,3.1,0.1865,0.1328,0.09521,4.053,1.646,2.378,41.0,28.81,10.8,16.52,40.0,2690,4688,210,1,151,gnome-shell; tracker-miner-fs-3; firefox,firefox; gnome-shell; Isolated Web Co
+2026-02-03 19:40:09,3.6,0.1445,0.1255,0.09229,4.053,1.647,2.377,41.0,28.81,10.8,16.52,40.0,2701,4709,210,1,151,gnome-shell; firefox; Isolated Web Co,firefox; gnome-shell; Isolated Web Co
+2026-02-03 19:40:20,4.1,0.1221,0.1206,0.09033,4.053,1.647,2.377,41.0,28.81,10.8,16.52,40.0,2712,4730,210,1,151,gnome-shell; firefox; kworker/u10:1-flush-8:0,firefox; gnome-shell; Isolated Web Co
