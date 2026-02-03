@@ -1,0 +1,19 @@
+================================================== CENTRALIZED SUMMARY REPORT - 2026-02-03 14:45:12
+[1] DIRECTORY CHANGE LOGS SUMMARY
+Total File Creations: 3
+Total File Deletions: 1
+Total File Modifications: 2
+Total Events Logged: 6
+
+[2] KEY STATISTICS
+Average File Size Detected: 1,420 Bytes
+Largest New Entry: 4,096 Bytes (Directory: /assets)
+Most Active User: akmal (5 events)
+Common File Type: Regular File (83%)
+
+[3] NOTABLE EVENTS (Alerts/Significant Changes)
+ALERT: Permission change detected on script.sh (Changed to 0o777).
+ALERT: Ownership change detected on database.db (Transferred to user: root).
+INFO: Directory baseline successfully updated 12 times in the last 2 hours.
+
+==================================================
